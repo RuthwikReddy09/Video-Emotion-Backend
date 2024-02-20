@@ -11,13 +11,13 @@ import numpy as np
 app = Flask(__name__)
 
 camera = cv2.VideoCapture(0)  
-face_classifier = cv2.CascadeClassifier("Live-Streaming-using-OpenCV-Flask\haarcascade_frontalface_default.xml")
-classifier =load_model("Live-Streaming-using-OpenCV-Flask\model.h5")
+face_classifier = cv2.CascadeClassifier(cv2.data.haarcascades +"haarcascade_frontalface_default.xml")
+classifier =load_model("C:\\Users\\druth\\Desktop\\stress detection\\Video-Emotion-Backend\\model.h5")
 emotion_labels = ['Angry','Disgust','Fear','Happy','Neutral', 'Sad', 'Surprise']
 cap = cv2.VideoCapture(0)
 
 
-def gen_frames():  # generate frame by frame from camera
+def gen_frames(): 
     while True:
         _, frame = cap.read()
         labels = []
@@ -39,19 +39,14 @@ def gen_frames():  # generate frame by frame from camera
                 cv2.putText(frame,label,label_position,cv2.FONT_HERSHEY_SIMPLEX,1,(0,255,0),2)
             else:
                 cv2.putText(frame,'No Faces',(30,80),cv2.FONT_HERSHEY_SIMPLEX,1,(0,255,0),2)
-        # cv2.imshow('Emotion Detector',frame)
         ret, buffer = cv2.imencode('.jpg', frame)
         frame = buffer.tobytes()
         yield (b'--frame\r\n'
                    b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
-        # if cv2.waitKey(1) & 0xFF == ord('q'):
-        #     break
-    # cap.release()
-    # cv2.destroyAllWindows()
+  
 
 @app.route('/video_feed')
 def video_feed():
-    #Video streaming route. Put this in the src attribute of an img tag
     return Response(gen_frames(), mimetype='multipart/x-mixed-replace; boundary=frame')
 
 
