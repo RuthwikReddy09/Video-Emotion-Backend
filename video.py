@@ -7,9 +7,11 @@ from tensorflow.keras.preprocessing.image import img_to_array
 from tensorflow.keras.preprocessing import image
 import cv2
 import numpy as np
+from flask_cors import CORS
 
 app = Flask(__name__)
 
+CORS(app) 
 camera = cv2.VideoCapture(0)  
 face_classifier = cv2.CascadeClassifier(cv2.data.haarcascades +"haarcascade_frontalface_default.xml")
 classifier =load_model("C:\\Users\\druth\\Desktop\\stress detection\\Video-Emotion-Backend\\model.h5")
